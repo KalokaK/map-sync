@@ -6,7 +6,7 @@ import gjum.minecraft.mapsync.common.MapSyncMod;
 import gjum.minecraft.mapsync.common.ModGui;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.client.ConfigGuiHandler;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,8 +38,8 @@ public class ForgeMapSyncMod extends MapSyncMod {
 
 		// Register hook for the mod list
 		ModLoadingContext.get().registerExtensionPoint(
-				ConfigGuiHandler.ConfigGuiFactory.class,
-				() -> new ConfigGuiHandler.ConfigGuiFactory(
+				ConfigScreenHandler.ConfigScreenFactory.class,
+				() -> new ConfigScreenHandler.ConfigScreenFactory(
 						(minecraft, previousScreen) -> new ModGui(previousScreen)
 				)
 		);
