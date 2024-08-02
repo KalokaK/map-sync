@@ -1,5 +1,7 @@
 package gjum.minecraft.mapsync.forge;
 
+import java.sql.ClientInfoStatus;
+
 import gjum.minecraft.mapsync.common.MapSyncMod;
 import gjum.minecraft.mapsync.common.ModGui;
 import net.minecraft.client.KeyMapping;
