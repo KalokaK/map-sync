@@ -68,14 +68,16 @@ public abstract class MixinClientPacketListener {
 		}
 	}
 
-	@Inject(method = "handleBlockBreakAck", at = @At("RETURN"))
-	protected void onHandleBlockBreakAck(ClientboundBlockBreakAckPacket packet, CallbackInfo ci) {
+	@Inject(method = "handleBlockChangedAck", at = @At("RETURN"))
+	protected void onHandleBlockChangedAck(ClientboundBlockChangedAckPacket packet, CallbackInfo ci) {
+		return;
+		/* It seems like 1.19 cannot figure the fuck out what this event is??? 	
 		if (!Minecraft.getInstance().isSameThread()) return; // will be called again on mc thread in a moment
 		try {
 			BlockPos pos = packet.pos();
 			getMod().handleMcChunkPartialChange(pos.getX() >> 4, pos.getZ() >> 4);
 		} catch (Throwable e) {
 			printErrorRateLimited(e);
-		}
+		}*/
 	}
 }

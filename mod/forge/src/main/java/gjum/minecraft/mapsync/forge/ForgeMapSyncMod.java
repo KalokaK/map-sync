@@ -1,12 +1,10 @@
 package gjum.minecraft.mapsync.forge;
 
-import java.sql.ClientInfoStatus;
-
 import gjum.minecraft.mapsync.common.MapSyncMod;
 import gjum.minecraft.mapsync.common.ModGui;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -58,6 +56,12 @@ public class ForgeMapSyncMod extends MapSyncMod {
 
 	@Override
 	public void registerKeyBinding(KeyMapping mapping) {
-		ClientRegistry.registerKeyBinding(mapping);
+		return;
+		// ClientRegistry.registerKeyBinding(mapping);
+	}
+
+	@SubscribeEvent
+	 public static void registerKeyMappingsEvent(RegisterKeyMappingsEvent event) {
+		event.register(ForgeMapSyncMod.openGuiKey);
 	}
 }

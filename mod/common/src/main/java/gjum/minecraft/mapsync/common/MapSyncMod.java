@@ -9,6 +9,7 @@ import gjum.minecraft.mapsync.common.net.packet.*;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.network.protocol.game.ClientboundLoginPacket;
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +38,7 @@ public abstract class MapSyncMod {
 		return INSTANCE;
 	}
 
-	private static final KeyMapping openGuiKey = new KeyMapping(
+	public static final KeyMapping openGuiKey = new KeyMapping(
 			"key.map-sync.openGui",
 			InputConstants.Type.KEYSYM,
 			GLFW.GLFW_KEY_COMMA,
@@ -101,7 +102,8 @@ public abstract class MapSyncMod {
 	 * only null when not connected to a server
 	 */
 	public @Nullable ServerConfig getServerConfig() {
-		final ServerData currentServer = Minecraft.getInstance().getCurrentServer();
+		final Minecraft instance = Minecraft.getInstance();
+		final ServerData currentServer = instance.getCurrentServer();
 		if (currentServer == null) {
 			serverConfig = null;
 			return null;

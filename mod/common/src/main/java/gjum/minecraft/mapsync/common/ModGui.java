@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class ModGui extends Screen {
 	Button syncServerConnectBtn;
 
 	public ModGui(Screen parentScreen) {
-		super(new TextComponent("Map-Sync"));
+		super(Component.literal("Map-Sync"));
 		this.parentScreen = parentScreen;
 	}
 
@@ -50,15 +50,17 @@ public class ModGui extends Screen {
 					right - 100,
 					top,
 					100, 20,
-					new TextComponent("Close"),
+					Component.literal("Close"),
 					button -> minecraft.setScreen(parentScreen)));
+			
+			final Minecraft gameInstance = Minecraft.getInstance();
 
-			if (serverConfig != null) {
+			if (serverConfig != null && !gameInstance.isLocalServer()) {
 				addWidget(syncServerAddressField = new EditBox(font,
 						left,
 						top + 40,
 						innerWidth - 110, 20,
-						new TextComponent("Sync Server Address")));
+						Component.literal("Sync Server Address")));
 				syncServerAddressField.setMaxLength(256);
 				syncServerAddressField.setValue(String.join(" ",
 						serverConfig.getSyncServerAddresses()));
@@ -67,7 +69,7 @@ public class ModGui extends Screen {
 						right - 100,
 						top + 40,
 						100, 20,
-						new TextComponent("Connect"),
+						Component.literal("Connect"),
 						this::connectClicked));
 			}
 		} catch (Throwable e) {
@@ -91,12 +93,18 @@ public class ModGui extends Screen {
 	@Override
 	public void render(@NotNull PoseStack poseStack, int i, int j, float f) {
 		try {
+			renderBackground(poseStack);
+			drawCenteredString(poseStack, font, title, width / 2, top, 0xFFFFFF);
+			
+			 Minecraft gameInstance = Minecraft.getInstance();
+			 if (gameInstance.isLocalServer()) {
+				drawCenteredString(poseStack, font, "Map-Sync only runs with proper servers!", width/2, 2 * top, 0xFFFFFF);
+				return;
+			 }
+
 			// wait for init() to finish
 			if (syncServerAddressField == null) return;
 			if (syncServerConnectBtn == null) return;
-
-			renderBackground(poseStack);
-			drawCenteredString(poseStack, font, title, width / 2, top, 0xFFFFFF);
 			syncServerAddressField.render(poseStack, i, j, f);
 
 			var dimensionState = getMod().getDimensionState();
