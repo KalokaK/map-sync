@@ -23,8 +23,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.crypto.*;
+import javax.crypto.spec.OAEPParameterSpec;
+import javax.crypto.spec.PSource;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
+import java.security.spec.MGF1ParameterSpec;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -267,7 +270,7 @@ public class SyncClient {
 						encrypt(packet.publicKey, sharedSecret),
 						encrypt(packet.publicKey, packet.verifyToken)));
 			} catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException |
-			         IllegalBlockSizeException e) {
+			         IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
 				shutDown();
 				throw new RuntimeException(e);
 			}
@@ -283,10 +286,11 @@ public class SyncClient {
 		}
 	}
 
-	private static byte[] encrypt(PublicKey key, byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, InvalidKeyException {
+	private static byte[] encrypt(PublicKey key, byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, InvalidKeyException, InvalidAlgorithmParameterException {
 		Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPPadding"); // RSA_PKCS1_PADDING is no longer supported for private decryption
-		https://docs.openssl.org/master/man3/RSA_public_encrypt/#description
-		cipher.init(Cipher.ENCRYPT_MODE, key);
+		// https://docs.openssl.org/master/man3/RSA_public_encrypt/#description
+		OAEPParameterSpec oaepParams = new OAEPParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), PSource.PSpecified.DEFAULT);
+		cipher.init(Cipher.ENCRYPT_MODE, key, oaepParams);
 		return cipher.doFinal(data);
 	}
 }
