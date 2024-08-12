@@ -45,7 +45,7 @@ export class TcpServer {
         return crypto.privateDecrypt(
             {
                 key: this.keyPair.privateKey,
-                padding: crypto.constants.RSA_PKCS1_PADDING,
+                padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
             },
             buf,
         );

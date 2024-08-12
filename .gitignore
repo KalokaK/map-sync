@@ -2,3 +2,8 @@
 *.iml
 /mapsync/
 /data/
+.vscode/
+**/.factorypath
+server/package-lock.json
+server/yarn.lock
+
