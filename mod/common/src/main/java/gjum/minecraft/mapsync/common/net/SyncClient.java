@@ -285,6 +285,7 @@ public class SyncClient {
 
 	private static byte[] encrypt(PublicKey key, byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, InvalidKeyException {
 		Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPPadding"); // RSA_PKCS1_PADDING is no longer supported for private decryption
+		https://docs.openssl.org/master/man3/RSA_public_encrypt/#description
 		cipher.init(Cipher.ENCRYPT_MODE, key);
 		return cipher.doFinal(data);
 	}
